@@ -8,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  clerkUserId   String    @unique
-  email         String    @unique
-  name          String?
-  imageUrl      String?
-  industry      String?
+  id              String    @id @default(uuid())
+  clerkUserId     String    @unique
+  email           String    @unique
+  name            String?
+  imageUrl        String?
+  industry        String?
   industryInsight IndustryInsight? @relation(fields: [industry], references: [industry])
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   bio           String?
   experience    Int?
@@ -28,64 +28,62 @@ model User {
 }
 
 model Assessment {
-  id            String    @id @default(cuid())
-  userId        String
-  user          User      @relation(fields: [userId], references: [id])
-  quizScore     Float
-  questions     Json[]
-  category      String
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id])
+  quizScore      Float
+  questions      Json[]   // ✅ fixed (removed ?)
+  category       String
   improvementTip String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@index([userId])
 }
 
 model Resume {
-  id          String    @id @default(cuid())
-  userId      String    @unique
-  user        User      @relation(fields: [userId], references: [id])
-  content     String    @db.Text
-  atsScore    Float?
-  feedback    String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  user      User      @relation(fields: [userId], references: [id])
+  content   String    @db.Text
+  atsScore  Float?
+  feedback  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model CoverLetter {
-  id              String    @id @default(cuid())
-  userId          String
-  user            User      @relation(fields: [userId], references: [id])
-  content         String
-  jobDescription  String?
-  companyName     String
-  jobTitle        String
-  status          String    @default("draft")
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id             String    @id @default(cuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id])
+  content        String
+  jobDescription String?
+  companyName    String
+  jobTitle       String
+  status         String    @default("draft")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@index([userId])
 }
 
 model IndustryInsight {
-  id            String    @id @default(cuid())
-  industry      String    @unique
+  id        String   @id @default(cuid())
+  industry  String   @unique
   
-  users         User[]
+  users     User[]
+
+  salaryRanges Json[]   // ✅ fixed
+  growthRate   Float?
+  demandLevel  String?
+  topSkills    String[]
   
-  salaryRanges  Json[]?   // ✅ optional
+  marketOutlook String?
+  keyTrends     String[]   // ✅ fixed
+  recommendedSkills String[] // ✅ fixed
   
-  growthRate    Float?    // ✅ optional
-  demandLevel   String?   // ✅ optional
-  topSkills     String[]  // keep required
-  
-  marketOutlook String?   // ✅ optional
-  keyTrends     String[]? // ✅ optional
-  
-  recommendedSkills String[]? // ✅ optional
-  
-  lastUpdated   DateTime  @default(now())
-  nextUpdate    DateTime
+  lastUpdated DateTime @default(now())
+  nextUpdate  DateTime
 
   @@index([industry])
 }
